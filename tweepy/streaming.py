@@ -193,6 +193,7 @@ class Stream(object):
         self.retry_time_cap = options.get("retry_time_cap", 320.0)
         self.snooze_time_step = options.get("snooze_time", 0.25)
         self.snooze_time_cap = options.get("snooze_time_cap", 16)
+        self.daemonize_thread = options.get("daemonize_thread", False)
 
         # The default socket.read size. Default to less than half the size of
         # a tweet so that it reads tweets with the minimal latency of 2 reads
@@ -341,6 +342,7 @@ class Stream(object):
         self.running = True
         if async:
             self._thread = Thread(target=self._run)
+            self._thread.daemon = self.daemonize_thread
             self._thread.start()
         else:
             self._run()
